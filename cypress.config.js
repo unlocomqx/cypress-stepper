@@ -1,9 +1,17 @@
-const { defineConfig } = require("cypress");
+const {defineConfig} = require("cypress")
 
 module.exports = defineConfig({
   e2e: {
-    setupNodeEvents(on, config) {
-      // implement node event listeners here
+    env: {
+      commandDelay: 500,
     },
+    baseUrl: "https://example.cypress.io",
+    fixturesFolder: false,
+    watchForFileChanges: true,
+    setupNodeEvents(on, config) {
+      // on("file:preprocessor", () => {
+      //   console.log('file:preprocessor')
+      // })
+    }
   },
-});
+})

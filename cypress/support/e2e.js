@@ -15,6 +15,10 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+import { stepper } from '../..'
 
+stepper()
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+
