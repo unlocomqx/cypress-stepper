@@ -3,22 +3,31 @@
 const {
   setPluginConfigValue,
   getPluginConfigValue,
-} = require('cypress-plugin-config')
+} = require("cypress-plugin-config")
+
+console.clear()
 
 function stepper() {
-  let lastCmd = ''
-  let lastSnapshot = ''
-  let lastLogId = ''
+  let lastCmd = ""
+  let lastSnapshot = ""
+  let lastLogId = ""
 
-  Cypress.on('test:after:run', () => {
+  Cypress.on("test:after:run", () => {
     setTimeout(() => {
+      console.log(lastLogId)
+      const reporterBus = window.top.getEventManager()
+        .reporterBus
+      reporterBus.emit("runner:show:snapshot", lastLogId)
+      reporterBus.emit("runner:unpin:snapshot")
+      Cypress.$autIframe.contents().find('.__cypress-highlight').remove()
       let attrs = Cypress.runner.getSnapshotPropsForLogById(lastLogId)
       console.log(attrs)
       if (attrs && attrs.snapshots) {
         let snapshot = attrs.snapshots[0]
-
+        console.log(snapshot, Cypress.runner)
+        console.log(Cypress.cy.getStyles(snapshot))
       }
-    }, 500)
+    }, 1000)
   })
 
   const createSnapshotOrig = cy.createSnapshot.bind(cy)
@@ -36,7 +45,7 @@ function stepper() {
     let result = addLogOrig(attrs, isInteractive)
     if (attrs.snapshots) {
       lastLogId = attrs.id
-      console.log({lastLogId})
+      console.log(lastLogId)
     }
     return result
   }
@@ -48,4 +57,4 @@ function stepper() {
   }
 }
 
-module.exports = { stepper }
+module.exports = {stepper}
